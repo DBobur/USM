@@ -1,4 +1,4 @@
-package uz.pro.domain.entity;
+package uz.pro.usm.domain.entity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
