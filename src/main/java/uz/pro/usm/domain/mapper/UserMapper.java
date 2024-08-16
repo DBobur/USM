@@ -15,8 +15,6 @@ public class UserMapper {
                 .roles(user.getRoles().stream()
                         .map(role -> role.getName())
                         .toList())
-                .createdDate(user.getCreatedDate().toString())
-                .updatedDate(user.getUpdatedDate().toString())
                 .build();
     }
 }

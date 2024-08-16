@@ -1,4 +1,4 @@
-package uz.pro.usm.service;
+package uz.pro.usm.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +36,7 @@ public class AuthService {
                         .map(id -> roleRepository.findById(id).orElseThrow())
                         .collect(Collectors.toList()))
                 .build();
+        userRepository.save(user);
         return UserMapper.toUserResponse(user);
     }
 
