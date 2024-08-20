@@ -1,14 +1,18 @@
-package uz.pro.usm.domain.dto.response;
+package uz.pro.usm.domain.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PermissionResponse {
+public class RoleResponse {
     private Long id;
     private String name;
+    private List<String> permissions;
 }

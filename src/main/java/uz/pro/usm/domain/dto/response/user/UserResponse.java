@@ -1,4 +1,4 @@
-package uz.pro.usm.domain.dto.response;
+package uz.pro.usm.domain.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

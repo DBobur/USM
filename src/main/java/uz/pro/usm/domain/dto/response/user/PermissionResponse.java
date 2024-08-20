@@ -1,15 +1,14 @@
-package uz.pro.usm.domain.dto.request;
+package uz.pro.usm.domain.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PermissionRequest {
+public class PermissionResponse {
+    private Long id;
     private String name;
 }
-

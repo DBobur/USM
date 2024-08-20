@@ -3,8 +3,8 @@ package uz.pro.usm.controller.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.pro.usm.domain.dto.request.RoleRequest;
-import uz.pro.usm.domain.dto.response.RoleResponse;
+import uz.pro.usm.domain.dto.request.user.RoleRequest;
+import uz.pro.usm.domain.dto.response.user.RoleResponse;
 import uz.pro.usm.service.user.RoleService;
 
 import java.util.List;

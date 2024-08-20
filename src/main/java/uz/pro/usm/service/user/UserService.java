@@ -2,7 +2,7 @@ package uz.pro.usm.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.pro.usm.domain.dto.request.UserUpdateRequest;
+import uz.pro.usm.domain.dto.request.user.UserUpdateRequest;
 import uz.pro.usm.domain.entity.user.User;
 import uz.pro.usm.repository.UserRepository;
 
