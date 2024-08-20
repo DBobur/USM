@@ -10,8 +10,8 @@ import uz.pro.usm.domain.dto.request.user.RegisterRequest;
 import uz.pro.usm.domain.dto.response.user.UserResponse;
 import uz.pro.usm.domain.entity.user.User;
 import uz.pro.usm.domain.mapper.UserMapper;
-import uz.pro.usm.repository.RoleRepository;
-import uz.pro.usm.repository.UserRepository;
+import uz.pro.usm.repository.user.RoleRepository;
+import uz.pro.usm.repository.user.UserRepository;
 import uz.pro.usm.security.JwtTokenUtil;
 
 import java.util.stream.Collectors;

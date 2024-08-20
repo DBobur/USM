@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.pro.usm.domain.dto.request.user.UserUpdateRequest;
 import uz.pro.usm.domain.entity.user.User;
-import uz.pro.usm.repository.UserRepository;
+import uz.pro.usm.repository.user.UserRepository;
 
 import java.util.function.Consumer;
 

@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.pro.usm.domain.entity.user.User;
 import uz.pro.usm.domain.entity.user.UserRole;
-import uz.pro.usm.repository.UserRepository;
+import uz.pro.usm.repository.user.UserRepository;
 
 import java.util.Collection;
 import java.util.List;
