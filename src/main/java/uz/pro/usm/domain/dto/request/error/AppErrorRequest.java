@@ -1,4 +1,4 @@
-package uz.pro.usm.domain.dto.request;
+package uz.pro.usm.domain.dto.request.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

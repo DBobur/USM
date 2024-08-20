@@ -1,7 +1,6 @@
 package uz.pro.usm.domain.mapper;
 
-import org.springframework.stereotype.Component;
-import uz.pro.usm.domain.dto.response.UserResponse;
+import uz.pro.usm.domain.dto.response.user.UserResponse;
 import uz.pro.usm.domain.entity.user.User;
 
 public class UserMapper {

@@ -1,17 +1,15 @@
-package uz.pro.usm.domain.dto.request;
+package uz.pro.usm.domain.dto.request.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoleRequest {
+public class PermissionRequest {
     private String name;
-    private List<Long> permissionIds;
 }
+

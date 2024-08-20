@@ -2,8 +2,8 @@ package uz.pro.usm.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.pro.usm.domain.dto.request.RoleRequest;
-import uz.pro.usm.domain.dto.response.RoleResponse;
+import uz.pro.usm.domain.dto.request.user.RoleRequest;
+import uz.pro.usm.domain.dto.response.user.RoleResponse;
 import uz.pro.usm.domain.entity.user.RolePermission;
 import uz.pro.usm.domain.entity.user.UserRole;
 import uz.pro.usm.repository.PermissionRepository;

@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import uz.pro.usm.domain.dto.request.AppErrorRequest;
+import uz.pro.usm.domain.dto.request.error.AppErrorRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;

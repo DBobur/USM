@@ -2,9 +2,8 @@ package uz.pro.usm.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.pro.usm.domain.dto.request.UserUpdateRequest;
+import uz.pro.usm.domain.dto.request.user.UserUpdateRequest;
 import uz.pro.usm.service.user.UserService;
 
 @RestController
