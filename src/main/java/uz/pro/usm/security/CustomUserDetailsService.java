@@ -14,6 +14,7 @@ import uz.pro.usm.repository.UserRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +36,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(List<UserRole> roles) {
-        List<SimpleGrantedAuthority> collect = roles.stream().flatMap(userRole -> userRole.getPermissions().stream())
-                .map(rolePermission -> new SimpleGrantedAuthority(rolePermission.getName()))
+        return roles.stream()
+                .flatMap(role -> {
+                    Stream<SimpleGrantedAuthority> rolePermissions = role.getPermissions().stream()
+                            .map(permission -> new SimpleGrantedAuthority(permission.getName()));
+                    Stream<SimpleGrantedAuthority> roleAuthorities = Stream.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+                    return Stream.concat(rolePermissions, roleAuthorities);
+                })
                 .collect(Collectors.toList());
 
-        List<SimpleGrantedAuthority> collect1 = roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName())).collect(Collectors.toList());
-        collect.addAll(collect1);
-        return collect;
     }
 }

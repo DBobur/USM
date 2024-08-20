@@ -1,4 +1,4 @@
-package uz.pro.usm.controller;
+package uz.pro.usm.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class PermissionController {
 
     //Hamma permissionlarni ko'rish
     @GetMapping
-    @PreAuthorize("hasPermission('FULLY','GE_ALL_PERMISSION')")
+    @PreAuthorize("hasAnyAuthority('FULLY','GE_ALL_PERMISSION')")
     public ResponseEntity<List<PermissionResponse>> getAllPermissions() {
         List<PermissionResponse> permissions = rolePermissionService.getAllPermissions();
         return ResponseEntity.ok(permissions);

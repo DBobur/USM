@@ -1,4 +1,4 @@
-package uz.pro.usm.controller;
+package uz.pro.usm.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

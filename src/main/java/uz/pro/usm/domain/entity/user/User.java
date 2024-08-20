@@ -1,10 +1,7 @@
 package uz.pro.usm.domain.entity.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +16,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
+@Setter
 @Table(name = "user_entity")
 public class User {
     @Id
@@ -40,7 +38,7 @@ public class User {
     private String email;
     @Column(unique = true)
     private String number;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
