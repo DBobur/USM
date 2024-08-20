@@ -16,7 +16,7 @@ import java.util.List;
 public class UserRole extends BaseEntity {
     @Column(unique = true,nullable = false)
     private String name;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_permission",
             joinColumns = @JoinColumn(name = "role_id"),

@@ -59,7 +59,9 @@ public class SecurityConfig {
                 .requestMatchers("/auth/login",
                         "/auth/register",
                         "/role/**",
-                        "permission/**")
+                        "permission/**",
+                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"
+                        )
                 .permitAll()
                 .anyRequest()
                 .fullyAuthenticated()
@@ -101,7 +103,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOriginPatterns(List.of(
-                "http//localhost:8080"
+                "http//localhost:8080",
+                "http//localhost:3000"
         ));
         corsConfiguration.setAllowedHeaders(List.of(
                 "Accept"
