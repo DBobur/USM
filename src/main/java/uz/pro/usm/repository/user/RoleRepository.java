@@ -1,4 +1,4 @@
-package uz.pro.usm.repository;
+package uz.pro.usm.repository.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

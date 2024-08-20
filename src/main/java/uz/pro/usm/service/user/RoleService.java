@@ -6,8 +6,8 @@ import uz.pro.usm.domain.dto.request.user.RoleRequest;
 import uz.pro.usm.domain.dto.response.user.RoleResponse;
 import uz.pro.usm.domain.entity.user.RolePermission;
 import uz.pro.usm.domain.entity.user.UserRole;
-import uz.pro.usm.repository.PermissionRepository;
-import uz.pro.usm.repository.RoleRepository;
+import uz.pro.usm.repository.user.PermissionRepository;
+import uz.pro.usm.repository.user.RoleRepository;
 
 import java.util.List;
 

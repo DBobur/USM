@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import uz.pro.usm.domain.entity.user.RolePermission;
 import uz.pro.usm.domain.dto.request.user.PermissionRequest;
 import uz.pro.usm.domain.dto.response.user.PermissionResponse;
-import uz.pro.usm.repository.PermissionRepository;
+import uz.pro.usm.repository.user.PermissionRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
