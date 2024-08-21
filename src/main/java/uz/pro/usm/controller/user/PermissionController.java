@@ -17,38 +17,34 @@ public class PermissionController {
 
     private final PermissionService rolePermissionService;
 
-    //Hamma permissionlarni ko'rish
     @GetMapping
-   //@PreAuthorize("hasAnyAuthority('FULLY','GE_ALL_PERMISSION')")
-    @PreAuthorize("hasAnyRole('ADMIN','SUPER','DIRECTOR','MANAGER','MENTOR')")
     public ResponseEntity<List<PermissionResponse>> getAllPermissions() {
         List<PermissionResponse> permissions = rolePermissionService.getAllPermissions();
         return ResponseEntity.ok(permissions);
     }
-    //Aynan id bo'yicha tegishli permissionni ko'rish
+
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','SUPER','DIRECTOR','MANAGER','MENTOR')")
     public ResponseEntity<PermissionResponse> getPermissionById(@PathVariable Long id) {
         PermissionResponse permission = rolePermissionService.getPermissionById(id);
         return ResponseEntity.ok(permission);
     }
-    //Yangi permission yaratish
+
+    @PreAuthorize("hasRole('SUPER')")
     @PostMapping
-    @PreAuthorize("hasAnyRole('SUPER')")
     public ResponseEntity<PermissionResponse> createPermission(@RequestBody PermissionRequest permissionRequest) {
         PermissionResponse newPermission = rolePermissionService.createPermission(permissionRequest);
         return ResponseEntity.ok(newPermission);
     }
-    //Bazada bor permissionni update qilish
+
+    @PreAuthorize("hasRole('SUPER')")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER')")
     public ResponseEntity<PermissionResponse> updatePermission(@PathVariable Long id, @RequestBody PermissionRequest permissionRequest) {
         PermissionResponse updatedPermission = rolePermissionService.updatePermission(id, permissionRequest);
         return ResponseEntity.ok(updatedPermission);
     }
-    //Bazada bor permissionni o'chirish
+
+    @PreAuthorize("hasRole('SUPER')")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER')")
     public ResponseEntity<Void> deletePermission(@PathVariable Long id) {
         rolePermissionService.deletePermission(id);
         return ResponseEntity.noContent().build();
