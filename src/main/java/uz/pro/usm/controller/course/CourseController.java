@@ -12,19 +12,19 @@ import uz.pro.usm.service.course.CourseService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/course")
 @RequiredArgsConstructor
 public class CourseController {
 
     private final CourseService courseService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MENTOR')")
     @PostMapping
     public ResponseEntity<CourseResponse> createCourse(@RequestBody CourseRequest courseRequest) {
         return new ResponseEntity<>(courseService.createCourse(courseRequest), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MENTOR')")
     @PutMapping("/{id}")
     public ResponseEntity<CourseResponse> updateCourse(@PathVariable Long id, @RequestBody CourseRequest courseRequest) {
         return ResponseEntity.ok(courseService.updateCourse(id, courseRequest));
@@ -40,7 +40,7 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MENTOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);

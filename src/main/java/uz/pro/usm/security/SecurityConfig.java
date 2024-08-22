@@ -57,13 +57,15 @@ public class SecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/login",
-                        "/auth/register",
+                        //"/auth/register",
                         "/role/**",
+                        "/user/**",
                         "permission/**",
                         "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"
                         )
                 .permitAll()
                 .anyRequest()
+                //.authenticated()
                 .fullyAuthenticated()
                 .and()
                 .sessionManagement()

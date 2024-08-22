@@ -10,19 +10,19 @@ import uz.pro.usm.domain.dto.response.course.LessonResponse;
 import uz.pro.usm.service.course.LessonService;
 
 @RestController
-@RequestMapping("/api/lessons")
+@RequestMapping("/lesson")
 @RequiredArgsConstructor
 public class LessonController {
 
     private final LessonService lessonService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MENTOR')")
     @PostMapping
     public ResponseEntity<LessonResponse> createLesson(@RequestBody LessonRequest lessonRequest) {
         return new ResponseEntity<>(lessonService.createLesson(lessonRequest), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MENTOR')")
     @PutMapping("/{id}")
     public ResponseEntity<LessonResponse> updateLesson(@PathVariable Long id, @RequestBody LessonRequest lessonRequest) {
         return ResponseEntity.ok(lessonService.updateLesson(id, lessonRequest));
@@ -33,7 +33,7 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.getLessonById(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MENTOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
         lessonService.deleteLesson(id);

@@ -1,6 +1,7 @@
 package uz.pro.usm.controller.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class AuthController {
        return authService.login(request);
     }
 
+    @PreAuthorize("hasRole('SUPER')")
     @PostMapping("/register")
     public UserResponse register(@RequestBody RegisterRequest request){
         return authService.save(request);
