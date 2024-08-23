@@ -5,8 +5,12 @@ import org.springframework.stereotype.Service;
 import uz.pro.usm.domain.dto.request.user.UserUpdateRequest;
 import uz.pro.usm.domain.dto.response.user.UserResponse;
 import uz.pro.usm.domain.entity.user.User;
+import uz.pro.usm.domain.entity.user.UserRole;
+import uz.pro.usm.repository.user.RoleRepository;
 import uz.pro.usm.repository.user.UserRepository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -15,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     public void updateUser(Long id, UserUpdateRequest userUpdateRequest) {
         User existingUser = userRepository.findById(id)
@@ -62,6 +67,19 @@ public class UserService {
                 .createdDate(user.getCreatedDate().toString())
                 .updatedDate(user.getUpdatedDate().toString())
                 .build();
+    }
+
+    public void updateUserRoles(Long userId, List<Long> roleIds) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<UserRole> roles = roleRepository.findAllById(roleIds);
+        if (roles.isEmpty()) {
+            throw new RuntimeException("Roles not found");
+        }
+
+        user.setRoles(new ArrayList<>(roles)); // Yangi rollarni belgilash
+        userRepository.save(user);
     }
 
     private void updateIfPresent(String newValue, Consumer<String> setter) {

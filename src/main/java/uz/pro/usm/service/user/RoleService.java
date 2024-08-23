@@ -9,6 +9,8 @@ import uz.pro.usm.domain.entity.user.UserRole;
 import uz.pro.usm.repository.user.PermissionRepository;
 import uz.pro.usm.repository.user.RoleRepository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -47,6 +49,21 @@ public class RoleService {
 
     public void deleteRole(Long id) {
         userRoleRepository.deleteById(id);
+    }
+
+    public RoleResponse updateRolePermissions(Long roleId, List<String> permissionNames) {
+        UserRole role = userRoleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        List<RolePermission> permissions = rolePermissionRepository.findByNameIn(permissionNames);
+        if (permissions.isEmpty()) {
+            throw new RuntimeException("Permissions not found");
+        }
+
+        role.setPermissions(new ArrayList<>(permissions));
+        userRoleRepository.save(role);
+
+        return new RoleResponse(role);
     }
 
     private RoleResponse mapToResponse(UserRole role) {

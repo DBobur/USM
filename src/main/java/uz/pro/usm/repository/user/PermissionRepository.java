@@ -8,4 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<RolePermission,Long> {
+    List<RolePermission> findByNameIn(List<String> names);
 }

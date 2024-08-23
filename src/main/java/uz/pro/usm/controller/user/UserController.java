@@ -43,4 +43,14 @@ public class UserController {
         UserResponse user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
+
+    @PreAuthorize("hasAnyAuthority('UPDATE_USER_ROLES')")
+    @PutMapping("/{id}/roles")
+    public ResponseEntity<String> updateUserRoles(
+            @PathVariable Long id,
+            @RequestBody List<Long> roleIds) {
+        userService.updateUserRoles(id, roleIds);
+        return ResponseEntity.ok("User roles updated successfully");
+    }
+
 }

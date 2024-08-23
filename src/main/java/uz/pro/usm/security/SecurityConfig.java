@@ -53,20 +53,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf()
-                .disable()
+                .csrf().disable()  // CSRF himoyasini o'chirish
+                .cors().and()  // CORS konfiguratsiyasini yoqish
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/login",
-                        //"/auth/register",
-                        "/role/**",
-                        "/user/**",
-                        "permission/**",
-                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"
-                        )
+                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                 .permitAll()
                 .anyRequest()
-                //.authenticated()
-                .fullyAuthenticated()
+                .authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -77,9 +71,11 @@ public class SecurityConfig {
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler())
                 .and()
-                .addFilterBefore(new JwtTokenFilter(jwtTokenUtil,userDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter(jwtTokenUtil, userDetailsService),
+                        UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -101,23 +97,37 @@ public class SecurityConfig {
         });
     }
 
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource(){
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowedOriginPatterns(List.of(
+//                "http//localhost:8080",
+//                "http//localhost:3000"
+//        ));
+//        corsConfiguration.setAllowedHeaders(List.of(
+//                "Accept"
+//        ));
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**",corsConfiguration);
+//        /*source.registerCorsConfiguration("/api/v2/**",corsConfiguration2);
+//        source.registerCorsConfiguration("/api/v3/**",corsConfiguration3);*/
+//        return source;
+//    }
+
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOriginPatterns(List.of(
-                "http//localhost:8080",
-                "http//localhost:3000"
-        ));
-        corsConfiguration.setAllowedHeaders(List.of(
-                "Accept"
-        ));
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000"));  // Frontend domenini qo'shish
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));  // Ruxsat etilgan metodlar
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));  // Ruxsat etilgan sarlavhalar
+        corsConfiguration.setAllowCredentials(true);  // Cookie yoki auth ma'lumotlarini uzatishga ruxsat
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",corsConfiguration);
-        /*source.registerCorsConfiguration("/api/v2/**",corsConfiguration2);
-        source.registerCorsConfiguration("/api/v3/**",corsConfiguration3);*/
+        source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
+
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity httpSecurity) throws Exception {
