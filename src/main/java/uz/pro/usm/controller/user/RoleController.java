@@ -47,4 +47,14 @@ public class RoleController {
         roleService.deleteRole(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasRole('SUPER')")
+    @PutMapping("/{id}/permissions")
+    public ResponseEntity<RoleResponse> updateRolePermissions(
+            @PathVariable Long id,
+            @RequestBody List<String> permissions) {
+        RoleResponse updatedRole = roleService.updateRolePermissions(id, permissions);
+        return ResponseEntity.ok(updatedRole);
+    }
+
 }

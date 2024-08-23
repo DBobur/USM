@@ -2,10 +2,7 @@ package uz.pro.usm.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.pro.usm.domain.dto.request.user.LoginRequest;
 import uz.pro.usm.domain.dto.request.user.RegisterRequest;
 import uz.pro.usm.domain.dto.response.user.UserResponse;

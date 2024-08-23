@@ -2,7 +2,9 @@ package uz.pro.usm.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.pro.usm.domain.dto.request.user.LoginRequest;
@@ -12,6 +14,7 @@ import uz.pro.usm.domain.entity.user.User;
 import uz.pro.usm.domain.mapper.UserMapper;
 import uz.pro.usm.repository.user.RoleRepository;
 import uz.pro.usm.repository.user.UserRepository;
+import uz.pro.usm.security.CustomUserDetailsService;
 import uz.pro.usm.security.JwtTokenUtil;
 
 import java.util.stream.Collectors;
@@ -23,6 +26,7 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
+    private final CustomUserDetailsService service;
 
     private final PasswordEncoder passwordEncoder;
     public UserResponse save(RegisterRequest request){
@@ -45,9 +49,9 @@ public class AuthService {
         String password = request.getPassword();
 
         var authentication = new UsernamePasswordAuthenticationToken(username,password);
-        authenticationManager.authenticate(authentication);
-       /* UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if(!passwordEncoder.matches(password,userDetails.getPassword())) throw new BadCredentialsException("No password?");*/
+        //authenticationManager.authenticate(authentication);
+        UserDetails userDetails = service.loadUserByUsername(username);
+        if(!passwordEncoder.matches(password,userDetails.getPassword())) throw new BadCredentialsException("No password?");
         return jwtTokenUtil.generateToken(username);
     }
 }

@@ -32,10 +32,14 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('GET_ALL_USERS')")
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
+    public ResponseEntity<List<UserResponse>> getAllUsers(
+            @RequestParam(name = "roleName", required = false) String roleName,
+            @RequestParam(name = "sortCreationDate", required = false) Boolean sortCreationDate) {
+        List<UserResponse> users = userService.getAllUsers(roleName, sortCreationDate);
         return ResponseEntity.ok(users);
     }
+
+
 
     @PreAuthorize("hasAnyAuthority('GET_USER_BY_ID')")
     @GetMapping("/{id}")
@@ -43,4 +47,14 @@ public class UserController {
         UserResponse user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
+
+    @PreAuthorize("hasAnyAuthority('UPDATE_USER_ROLES')")
+    @PutMapping("/{id}/roles")
+    public ResponseEntity<String> updateUserRoles(
+            @PathVariable Long id,
+            @RequestBody List<Long> roleIds) {
+        userService.updateUserRoles(id, roleIds);
+        return ResponseEntity.ok("User roles updated successfully");
+    }
+
 }

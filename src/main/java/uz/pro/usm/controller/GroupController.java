@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/group")
 @RequiredArgsConstructor
@@ -40,5 +42,23 @@ public class GroupController {
     public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
         groupService.deleteGroup(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Guruhga userlar biriktirish
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PostMapping("/{id}/users")
+    public ResponseEntity<GroupResponse> addUsersToGroup(
+            @PathVariable Long id, @RequestBody List<Long> userIds) {
+        GroupResponse updatedGroup = groupService.addUsersToGroup(id, userIds);
+        return ResponseEntity.ok(updatedGroup);
+    }
+
+    // Guruhga mentor biriktirish
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PostMapping("/{id}/mentor")
+    public ResponseEntity<GroupResponse> assignMentorToGroup(
+            @PathVariable Long id, @RequestBody Long mentorId) {
+        GroupResponse updatedGroup = groupService.assignMentorToGroup(id, mentorId);
+        return ResponseEntity.ok(updatedGroup);
     }
 }
