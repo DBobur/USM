@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    protected Long id;
 
     @CreationTimestamp
-    private LocalDateTime createdTime;
+    protected LocalDateTime createdTime;
 
     @UpdateTimestamp
-    private LocalDateTime updatedTime;
+    protected LocalDateTime updatedTime;
 }

@@ -10,6 +10,7 @@ import uz.pro.usm.repository.user.RoleRepository;
 import uz.pro.usm.repository.user.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
@@ -40,8 +41,19 @@ public class UserService {
         ));
     }
 
-    public List<UserResponse> getAllUsers() {
+    public List<UserResponse> getAllUsers(String roleName, Boolean sortCreationDate) {
         List<User> users = userRepository.findAll();
+
+        if (roleName != null && !roleName.isEmpty()) {
+            users = users.stream()
+                    .filter(user -> user.getRoles().stream().anyMatch(role -> role.getName().equalsIgnoreCase(roleName)))
+                    .collect(Collectors.toList());
+        }
+
+        if (sortCreationDate != null && sortCreationDate) {
+            users.sort(Comparator.comparing(User::getCreatedDate));
+        }
+
         return users.stream()
                 .map(this::mapToUserResponse)
                 .collect(Collectors.toList());

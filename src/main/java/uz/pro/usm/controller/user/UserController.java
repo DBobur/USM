@@ -32,10 +32,14 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('GET_ALL_USERS')")
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
+    public ResponseEntity<List<UserResponse>> getAllUsers(
+            @RequestParam(name = "roleName", required = false) String roleName,
+            @RequestParam(name = "sortCreationDate", required = false) Boolean sortCreationDate) {
+        List<UserResponse> users = userService.getAllUsers(roleName, sortCreationDate);
         return ResponseEntity.ok(users);
     }
+
+
 
     @PreAuthorize("hasAnyAuthority('GET_USER_BY_ID')")
     @GetMapping("/{id}")

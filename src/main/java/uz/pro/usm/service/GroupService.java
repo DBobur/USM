@@ -11,6 +11,7 @@ import uz.pro.usm.repository.GroupRepository;
 import uz.pro.usm.repository.user.UserRepository;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,37 @@ public class GroupService {
             throw new RuntimeException("Group not found with ID: " + id);
         }
         groupRepository.deleteById(id);
+    }
+
+    @Transactional
+    public GroupResponse addUsersToGroup(Long groupId, List<Long> userIds) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group not found with id " + groupId));
+
+        List<User> users = userRepository.findAllById(userIds);
+
+        if (users.isEmpty()) {
+            throw new RuntimeException("No users found with the provided IDs");
+        }
+
+        group.getUsers().addAll(users);
+        groupRepository.save(group);
+
+        return mapToResponse(group);
+    }
+
+    @Transactional
+    public GroupResponse assignMentorToGroup(Long groupId, Long mentorId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group not found with id " + groupId));
+
+        User mentor = userRepository.findById(mentorId)
+                .orElseThrow(() -> new RuntimeException("Mentor not found with id " + mentorId));
+
+        group.setMentor(mentor);
+        groupRepository.save(group);
+
+        return mapToResponse(group);
     }
 
     private GroupResponse mapToResponse(Group group) {
