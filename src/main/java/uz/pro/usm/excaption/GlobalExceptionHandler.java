@@ -1,4 +1,4 @@
-package uz.pro.usm.exception;
+package uz.pro.usm.excaption;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

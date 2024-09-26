@@ -28,7 +28,7 @@ public class AuthController {
         }
     }
 
-    @PreAuthorize("hasRole('SUPER')")
+    //@PreAuthorize("hasRole('SUPER')")
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
         try {

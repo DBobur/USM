@@ -21,7 +21,7 @@ public class JwtTokenUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setIssuer("http://localhost:8080/uz.pro.usm")
-                .setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(signKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
