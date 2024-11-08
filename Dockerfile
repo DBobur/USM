@@ -1,8 +1,8 @@
-# Base image
+# Asosiy rasm
 FROM openjdk:17-jdk-alpine
 
-# Application jar file location in the build/libs folder
+# JAR faylini konteynerga nusxalash
 COPY build/libs/USM-0.0.1-SNAPSHOT.jar /app.jar
 
-# Run the jar file
-ENTRYPOINT ["java","-jar","/app.jar"]
+# JAR faylini ishga tushirish
+ENTRYPOINT ["java", "-jar", "/app.jar"]

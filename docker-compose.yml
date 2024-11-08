@@ -1,4 +1,4 @@
-#version: '3.8' # Versiyani yangilash tavsiya etiladi
+version: '3.8'  # Versiyani yangilash tavsiya etiladi
 services:
   app:
     image: my-project
@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Tashqi port
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/usm
       SPRING_DATASOURCE_USERNAME: postgres
@@ -24,7 +24,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1483
     ports:
-      - "5433:5432"
+      - "5433:5432"  # Tashqi port
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
