@@ -30,7 +30,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
         String token = authorization.substring(7);
-        if(!jwtTokenUtil.isValid(token)){
+        if(!jwtTokenUtil.isValid(token) ){
             filterChain.doFilter(request,response);
             return;
         }
@@ -40,6 +40,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         var webAuthenticationDetails = new WebAuthenticationDetailsSource().buildDetails(request);
         authentication.setDetails(webAuthenticationDetails);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        filterChain.doFilter(request,response);
+        filterChain .doFilter(request,response);
     }
 }

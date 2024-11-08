@@ -39,8 +39,6 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-
-
     @PreAuthorize("hasAnyAuthority('GET_USER_BY_ID')")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {

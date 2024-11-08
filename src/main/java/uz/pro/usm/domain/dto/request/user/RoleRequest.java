@@ -13,5 +13,5 @@ import java.util.List;
 @Builder
 public class RoleRequest {
     private String name;
-    private List<Long> permissionIds;
+    private List<Long> permissionIds; 
 }

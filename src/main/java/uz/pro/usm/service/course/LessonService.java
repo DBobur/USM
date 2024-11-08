@@ -25,7 +25,6 @@ public class LessonService {
         lesson.setTitle(lessonRequest.getTitle());
         lesson.setContent(lessonRequest.getContent());
         lesson.setCourse(course);
-
         lesson = lessonRepository.save(lesson);
 
         return new LessonResponse(lesson.getId(), lesson.getTitle(), lesson.getContent(), course.getId());

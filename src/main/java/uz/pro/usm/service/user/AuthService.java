@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final CustomUserDetailsService service;
 
