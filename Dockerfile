@@ -1,11 +1,15 @@
+
 # Asosiy rasm
 FROM openjdk:17-jdk-alpine
 
-# Ishchi katalogni yaratish
+# Ishchi katalogni o'rnatish
 WORKDIR /app
 
-# JAR faylini konteynerga nusxalash
-COPY build/libs/USM-0.0.1-SNAPSHOT.jar app.jar
+# Loyiha fayllarini konteynerga nusxalash
+COPY . .
 
-# JAR faylini ishga tushirish
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# JAR faylni qurish
+RUN ./gradlew build
+
+# JAR faylni ishga tushirish
+ENTRYPOINT ["java", "-jar", "build/libs/USM-0.0.1-SNAPSHOT.jar"]
