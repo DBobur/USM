@@ -37,32 +37,16 @@ public class RoleController {
         return ResponseEntity.ok(role);
     }
 
-    @PreAuthorize("hasRole('SUPER')")
-    @Operation(summary = "Fayl yuklash va role yaratish")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fayl muvaffaqiyatli yuklandi",
-                    content = {@Content(mediaType = "application/json")}),
-            @ApiResponse(responseCode = "400", description = "Yuklashda xatolik",
-                    content = @Content)
-    })
-    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.APPLICATION_JSON_VALUE})
+    //@PreAuthorize("hasRole('SUPER')")
+    @PostMapping()
     public ResponseEntity<String> uploadFile(
-            @RequestPart ("file") MultipartFile file,
             @RequestParam("roleRequest") RoleRequest roleRequest) {
-
-        // Faylni qayta ishlash
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Fayl bo'sh.");
-        }
-
-        // Faylni saqlash yoki boshqa ishlarni bajaring
-        String fileName = file.getOriginalFilename();
 
         // Rol yaratish jarayoni
         RoleResponse newRole = roleService.createRole(roleRequest);
 
         // Muvaffaqiyatli natija
-        return ResponseEntity.ok("Fayl muvaffaqiyatli yuklandi: " + fileName + ", Rol: " + newRole);
+        return ResponseEntity.ok("Rol: " + newRole);
     }
 
 
