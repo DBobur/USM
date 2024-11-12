@@ -1,12 +1,14 @@
-
 # Asosiy rasm
 FROM openjdk:17-jdk-alpine
 
-# Ishchi katalogni o'rnatish
+# Ishchi katalogni yaratish va belgilash
 WORKDIR /app
 
-# Loyiha fayllarini konteynerga nusxalash
+# Barcha loyiha fayllarini konteyner ichiga nusxalash
 COPY . .
+
+# gradlew faylni bajariladigan qilish
+RUN chmod +x gradlew
 
 # JAR faylni qurish
 RUN ./gradlew build
