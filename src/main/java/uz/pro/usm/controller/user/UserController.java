@@ -30,7 +30,7 @@ public class UserController {
         return ResponseEntity.ok("User deleted successfully");
     }
 
-    @PreAuthorize("hasAnyAuthority('GET_ALL_USERS')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers(
             @RequestParam(name = "roleName", required = false) String roleName,
