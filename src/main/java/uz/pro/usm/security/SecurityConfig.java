@@ -56,8 +56,8 @@ public class SecurityConfig {
                 .csrf().disable()  // CSRF himoyasini o'chirish
                 .cors().and()  // CORS konfiguratsiyasini yoqish
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/login",
-                        "/auth/register",
+                .requestMatchers("/api/auth/login",
+                        "/api/auth/register",
                         "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                 .permitAll()
                 .anyRequest()

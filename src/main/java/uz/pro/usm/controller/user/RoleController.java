@@ -39,8 +39,8 @@ public class RoleController {
 
     //@PreAuthorize("hasRole('SUPER')")
     @PostMapping()
-    public ResponseEntity<String> uploadFile(
-            @RequestParam("roleRequest") RoleRequest roleRequest) {
+    public ResponseEntity<String> createRole(
+            @RequestBody RoleRequest roleRequest) {
 
         // Rol yaratish jarayoni
         RoleResponse newRole = roleService.createRole(roleRequest);
