@@ -1,29 +1,41 @@
 package uz.pro.usm.domain.dto.response.user;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import uz.pro.usm.domain.entity.user.RolePermission;
-import uz.pro.usm.domain.entity.user.UserRole;
+import lombok.Getter;
+import lombok.ToString;
+import uz.pro.usm.domain.entity.user.Permission;
+import uz.pro.usm.domain.entity.user.Role;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @Builder
+@ToString
 public class RoleResponse {
-    private Long id;
-    private String name;
-    private List<String> permissions;
 
-    public RoleResponse(UserRole role) {
-        this.id = role.getId();
-        this.name = role.getName();
-        this.permissions = role.getPermissions().stream()
-                .map(RolePermission::getName)
-                .collect(Collectors.toList());
+    @NotNull
+    private final Long id;
+
+    @NotNull
+    private final String name;
+
+    @NotNull
+    private final List<String> permissions;
+
+    public static RoleResponse from(Role role) {
+        if (role == null) {
+            throw new IllegalArgumentException("Role cannot be null");
+        }
+        return RoleResponse.builder()
+                .id(role.getId())
+                .name(role.getName())
+                .permissions(
+                        role.getPermissions().stream()
+                                .map(Permission::getName)
+                                .collect(Collectors.toList())
+                )
+                .build();
     }
 }

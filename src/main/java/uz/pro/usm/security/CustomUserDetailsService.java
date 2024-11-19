@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.pro.usm.domain.entity.user.User;
-import uz.pro.usm.domain.entity.user.UserRole;
 import uz.pro.usm.repository.user.UserRepository;
 
 import java.util.Collection;
@@ -26,27 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 () -> new UsernameNotFoundException("User not found")
         );
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                true,true,true,true,
-                getAuthorities(user.getRoles())
-        );
+        return user;
 
     }
-
-    private Collection<? extends GrantedAuthority> getAuthorities(List<UserRole> roles) {
-        return roles.stream()
-                .flatMap(role -> {
-                    // Null bo'lganda bo'sh ro'yxat qaytaradi
-                    Stream<SimpleGrantedAuthority> rolePermissions = role.getPermissions() == null ?
-                            Stream.empty() : role.getPermissions().stream()
-                            .map(permission -> new SimpleGrantedAuthority(permission.getName()));
-
-                    Stream<SimpleGrantedAuthority> roleAuthorities = Stream.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-                    return Stream.concat(rolePermissions, roleAuthorities);
-                })
-                .collect(Collectors.toList());
-    }
-
 }

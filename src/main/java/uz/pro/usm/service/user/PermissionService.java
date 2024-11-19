@@ -1,11 +1,14 @@
 package uz.pro.usm.service.user;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.pro.usm.domain.entity.user.RolePermission;
+import uz.pro.usm.domain.entity.user.Permission;
 import uz.pro.usm.domain.dto.request.user.PermissionRequest;
 import uz.pro.usm.domain.dto.response.user.PermissionResponse;
+import uz.pro.usm.excaption.ResourceNotFoundException;
 import uz.pro.usm.repository.user.PermissionRepository;
+import uz.pro.usm.service.BaseHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,44 +17,46 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PermissionService {
 
-    private final PermissionRepository rolePermissionRepository;
+    private final PermissionRepository permissionRepository;
 
     public List<PermissionResponse> getAllPermissions() {
-        return rolePermissionRepository.findAll().stream()
-                .map(this::mapToResponse)
+        return permissionRepository.findAll().stream()
+                .map(PermissionResponse::from)
                 .collect(Collectors.toList());
     }
 
     public PermissionResponse getPermissionById(Long id) {
-        RolePermission permission = rolePermissionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Permission not found"));
-        return mapToResponse(permission);
+        Permission permission = permissionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Permission with id " + id + " not found"));
+        return PermissionResponse.from(permission);
     }
 
+    @Transactional
     public PermissionResponse createPermission(PermissionRequest permissionRequest) {
-        RolePermission permission = RolePermission.builder()
+        Permission permission = Permission.builder()
                 .name(permissionRequest.getName())
                 .build();
-        RolePermission savedPermission = rolePermissionRepository.save(permission);
-        return mapToResponse(savedPermission);
+        Permission savedPermission = permissionRepository.save(permission);
+        return PermissionResponse.from(savedPermission);
     }
 
+    @Transactional
     public PermissionResponse updatePermission(Long id, PermissionRequest permissionRequest) {
-        RolePermission permission = rolePermissionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Permission not found"));
-        permission.setName(permissionRequest.getName());
-        RolePermission updatedPermission = rolePermissionRepository.save(permission);
-        return mapToResponse(updatedPermission);
+        Permission permission = permissionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Permission with id " + id + " not found"));
+
+        BaseHelper.updateIfPresent(permissionRequest.getName(),permission::setName);
+        BaseHelper.updateIfPresent(permissionRequest.getDescription(),permission::setDescription);
+
+        Permission updatedPermission = permissionRepository.save(permission);
+        return PermissionResponse.from(updatedPermission);
     }
 
+    @Transactional
     public void deletePermission(Long id) {
-        rolePermissionRepository.deleteById(id);
-    }
-
-    private PermissionResponse mapToResponse(RolePermission permission) {
-        return PermissionResponse.builder()
-                .id(permission.getId())
-                .name(permission.getName())
-                .build();
+        if (!permissionRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Permission with id " + id + " not found");
+        }
+        permissionRepository.deleteById(id);
     }
 }

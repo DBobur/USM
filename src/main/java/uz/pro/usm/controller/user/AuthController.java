@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pro.usm.domain.dto.request.user.LoginRequest;
-import uz.pro.usm.domain.dto.request.user.RegisterRequest;
+
+import uz.pro.usm.domain.dto.request.user.UserRequest;
 import uz.pro.usm.domain.dto.response.user.UserResponse;
 import uz.pro.usm.service.user.AuthService;
 
@@ -28,9 +29,8 @@ public class AuthController {
         }
     }
 
-    //@PreAuthorize("hasRole('SUPER')")
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRequest request) {
         try {
             UserResponse userResponse = authService.save(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);

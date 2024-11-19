@@ -64,13 +64,13 @@ public class RoleController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('SUPER')")
+   /* @PreAuthorize("hasRole('SUPER')")
     @PutMapping("/{id}/permissions")
     public ResponseEntity<RoleResponse> updateRolePermissions(
             @PathVariable Long id,
             @RequestBody List<String> permissions) {
         RoleResponse updatedRole = roleService.updateRolePermissions(id, permissions);
         return ResponseEntity.ok(updatedRole);
-    }
+    }*/
 
 }

@@ -1,102 +1,89 @@
 package uz.pro.usm.service.user;
 
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.pro.usm.domain.dto.request.user.UserUpdateRequest;
 import uz.pro.usm.domain.dto.response.user.UserResponse;
+import uz.pro.usm.domain.entity.user.Role;
 import uz.pro.usm.domain.entity.user.User;
-import uz.pro.usm.domain.entity.user.UserRole;
+import uz.pro.usm.excaption.ResourceNotFoundException;
 import uz.pro.usm.repository.user.RoleRepository;
 import uz.pro.usm.repository.user.UserRepository;
+import uz.pro.usm.service.BaseHelper;
+import uz.pro.usm.specification.UserSpecifications;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public void updateUser(Long id, UserUpdateRequest userUpdateRequest) {
+    @Transactional
+    public void updateUser(Long id, @Valid UserUpdateRequest userUpdateRequest) {
+
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-        updateIfPresent(userUpdateRequest.getFullName(), existingUser::setFullName);
-        updateIfPresent(userUpdateRequest.getUsername(), existingUser::setUsername);
-        updateIfPresent(userUpdateRequest.getPassword(), existingUser::setPassword);
-        updateIfPresent(userUpdateRequest.getEmail(), existingUser::setEmail);
-        updateIfPresent(userUpdateRequest.getNumber(), existingUser::setNumber);
+        BaseHelper.updateIfPresent(userUpdateRequest.getFullName(), existingUser::setFullName);
+        BaseHelper.updateIfPresent(userUpdateRequest.getUsername(), existingUser::setUsername);
+        BaseHelper.updateIfPresent(userUpdateRequest.getPassword(),
+                password -> existingUser.setPassword(passwordEncoder.encode(password)));
+        BaseHelper.updateIfPresent(userUpdateRequest.getEmail(), existingUser::setEmail);
+        BaseHelper.updateIfPresent(userUpdateRequest.getNumber(), existingUser::setNumber);
 
         userRepository.save(existingUser);
     }
 
-    public void deleteUser(Long id){
-        userRepository.delete(userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("User not found")
-        ));
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
+
+        userRepository.delete(user);
     }
 
-    public List<UserResponse> getAllUsers(String roleName, Boolean sortCreationDate) {
-        List<User> users = userRepository.findAll();
-
-        if (roleName != null && !roleName.isEmpty()) {
-            users = users.stream()
-                    .filter(user -> user.getRoles().stream().anyMatch(role -> role.getName().equalsIgnoreCase(roleName)))
-                    .collect(Collectors.toList());
-        }
-
-        if (sortCreationDate != null && sortCreationDate) {
-            users.sort(Comparator.comparing(User::getCreatedDate));
-        }
-
-        return users.stream()
-                .map(this::mapToUserResponse)
-                .collect(Collectors.toList());
+    public Page<UserResponse> getAllUsers(String roleName, Pageable pageable) {
+        Specification<User> spec = Specification.where(UserSpecifications.hasRoleName(roleName));
+        Page<User> users = userRepository.findAll(spec, pageable);
+        return users.map(UserResponse::from);
     }
 
 
     public UserResponse getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
-        return mapToUserResponse(user);
+        return UserResponse.from(userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("User with id " + id + " not found")));
     }
 
-    private UserResponse mapToUserResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .fullName(user.getFullName())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .number(user.getNumber())
-                .roles(user.getRoles().stream()
-                        .map(role -> role.getName())
-                        .collect(Collectors.toList()))
-                .createdDate(user.getCreatedDate().toString())
-                .updatedDate(user.getUpdatedDate().toString())
-                .build();
-    }
-
+    @Transactional
     public void updateUserRoles(Long userId, List<Long> roleIds) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
-        List<UserRole> roles = roleRepository.findAllById(roleIds);
-        if (roles.isEmpty()) {
-            throw new RuntimeException("Roles not found");
+        if (roleIds == null || roleIds.isEmpty()) {
+            throw new IllegalArgumentException("Role IDs must not be empty. Please provide valid role IDs.");
         }
 
-        user.setRoles(new ArrayList<>(roles)); // Yangi rollarni belgilash
+        List<Role> roles = roleRepository.findAllById(roleIds);
+        if (roles.size() != roleIds.size()) {
+            List<Long> missingRoleIds = roleIds.stream()
+                    .filter(id -> roles.stream().noneMatch(role -> role.getId().equals(id)))
+                    .toList();
+            throw new ResourceNotFoundException("Roles not found for IDs: " + missingRoleIds);
+        }
+
+        user.setRoles(new ArrayList<>(roles));
         userRepository.save(user);
     }
 
-    private void updateIfPresent(String newValue, Consumer<String> setter) {
-        if (newValue != null && !newValue.isEmpty()) {
-            setter.accept(newValue);
-        }
-    }
 }

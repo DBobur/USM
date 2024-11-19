@@ -1,17 +1,21 @@
 package uz.pro.usm.domain.dto.request.user;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @Builder
+@ToString
 public class RoleRequest {
-    private String name;
-    private List<Long> permissionIds; 
+
+    @NotBlank(message = "Role name must not be blank")
+    private final String name;
+
+    @NotEmpty(message = "Permission IDs must not be empty")
+    private final List<Long> permissionIds;
 }

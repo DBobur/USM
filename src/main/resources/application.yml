@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: USM
+
+  datasource:
+#    url: ${SPRING_DATASOURCE_URL}
+#    username: ${SPRING_DATASOURCE_USERNAME}
+#    password: ${SPRING_DATASOURCE_PASSWORD}
+#    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/usm
+    username: postgres
+    password: 1483
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+  profiles:
+    active: dev
+
+logging:
+  level:
+    org.springframework: INFO
+    com.example.usm: DEBUG
+  file:
+    name: logs/usm.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always

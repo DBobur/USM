@@ -1,76 +1,90 @@
 package uz.pro.usm.service.user;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.pro.usm.domain.dto.request.user.RoleRequest;
 import uz.pro.usm.domain.dto.response.user.RoleResponse;
-import uz.pro.usm.domain.entity.user.RolePermission;
-import uz.pro.usm.domain.entity.user.UserRole;
+import uz.pro.usm.domain.entity.user.Permission;
+import uz.pro.usm.domain.entity.user.Role;
+import uz.pro.usm.excaption.ResourceNotFoundException;
 import uz.pro.usm.repository.user.PermissionRepository;
 import uz.pro.usm.repository.user.RoleRepository;
+import uz.pro.usm.service.BaseHelper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RoleService {
 
-    private final RoleRepository userRoleRepository;
-    private final PermissionRepository rolePermissionRepository;
+    private final RoleRepository roleRepository;
+    private final PermissionRepository permissionRepository;
 
     public List<RoleResponse> getAllRoles() {
-        return userRoleRepository.findAll().stream()
-                .map(this::mapToResponse)
+        return roleRepository.findAll().stream()
+                .map(RoleResponse::from)
                 .toList();
     }
 
     public RoleResponse getRoleById(Long id) {
-        UserRole role = userRoleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role not found"));
-        return mapToResponse(role);
+        Role role = roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Role with id " + id + " not found"));
+        return RoleResponse.from(role);
     }
 
+    @Transactional
     public RoleResponse createRole(RoleRequest roleRequest) {
-        UserRole role = new UserRole();
-        role.setName(roleRequest.getName());
-        role.setPermissions(rolePermissionRepository.findAllById(roleRequest.getPermissionIds()));
-        UserRole savedRole = userRoleRepository.save(role);
-        return mapToResponse(savedRole);
+        Role role = Role.builder()
+                .name(roleRequest.getName())
+                .permissions(
+                        permissionRepository.findAllById(roleRequest.getPermissionIds())
+                )
+                .build();
+        Role savedRole = roleRepository.save(role);
+        return RoleResponse.from(savedRole);
     }
 
+    @Transactional
     public RoleResponse updateRole(Long id, RoleRequest roleRequest) {
-        UserRole role = userRoleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role not found"));
-        role.setName(roleRequest.getName());
-        role.setPermissions(rolePermissionRepository.findAllById(roleRequest.getPermissionIds()));
-        UserRole updatedRole = userRoleRepository.save(role);
-        return mapToResponse(updatedRole);
+
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Role with id " + id + " not found"));
+
+        BaseHelper.updateIfPresent(roleRequest.getName(),role::setName);
+        BaseHelper.updateIfPresent(
+                roleRequest.getPermissionIds(),
+                permissionIds -> {
+                    List<Permission> permissions = validatePermissions(permissionIds);
+                    role.setPermissions(permissions);
+                }
+        );
+        Role updatedRole = roleRepository.save(role);
+
+        return RoleResponse.from(updatedRole);
     }
 
-    public void deleteRole(Long id) {
-        userRoleRepository.deleteById(id);
-    }
+    private List<Permission> validatePermissions(List<Long> permissionIds) {
+        List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+        List<Long> foundIds = permissions.stream()
+                .map(Permission::getId)
+                .toList();
+        List<Long> missingIds = permissionIds.stream()
+                .filter(id -> !foundIds.contains(id))
+                .toList();
 
-    public RoleResponse updateRolePermissions(Long roleId, List<String> permissionNames) {
-        UserRole role = userRoleRepository.findById(roleId)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-
-        List<RolePermission> permissions = rolePermissionRepository.findByNameIn(permissionNames);
-        if (permissions.isEmpty()) {
-            throw new RuntimeException("Permissions not found");
+        if (!missingIds.isEmpty()) {
+            throw new IllegalArgumentException("Permissions with IDs " + missingIds + " not found");
         }
 
-        role.setPermissions(new ArrayList<>(permissions));
-        userRoleRepository.save(role);
-
-        return new RoleResponse(role);
+        return permissions;
     }
 
-    private RoleResponse mapToResponse(UserRole role) {
-        return RoleResponse.builder()
-                .id(role.getId())
-                .name(role.getName())
-                .permissions(role.getPermissions().stream().map(RolePermission::getName).toList())
-                .build();
+    @Transactional
+    public void deleteRole(Long id) {
+        if (!roleRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Role with id " + id + " not found");
+        }
+        roleRepository.deleteById(id);
     }
 }

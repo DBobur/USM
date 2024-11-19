@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class UserUpdateRequest {
 
     @NotBlank(message = "Full name is mandatory")
-    @Size(min = 3, max = 100, message = "Full name must be between 3 and 100 characters")
+    @Size(max = 100, message = "Full name must not exceed 100 characters")
     private String fullName;
 
     @NotBlank(message = "Username is mandatory")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @Size(max = 50, message = "Username must not exceed 50 characters")
     private String username;
 
     @Size(min = 8, message = "Password must be at least 8 characters long")
@@ -32,4 +32,7 @@ public class UserUpdateRequest {
 
     @Pattern(regexp = "^[+]?[0-9]{10,15}$", message = "Phone number must be valid")
     private String number;
+
+    @Size(max = 255, message = "Address must not exceed 255 characters")
+    private String address;
 }
